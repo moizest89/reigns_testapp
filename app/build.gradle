@@ -3,11 +3,15 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
-    compileSdk 30
 
+    def props = new Properties()
+    props.load(new FileInputStream(rootProject.file('local.properties')))
+
+    compileSdk 30
     defaultConfig {
         applicationId "com.moizest89.reign.apptest"
         minSdk 23
@@ -21,7 +25,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField "String", "API_URL", props["API_URL"]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String", "API_URL", props["API_URL"]
         }
     }
     compileOptions {
@@ -34,6 +42,11 @@ android {
     buildFeatures{
         dataBinding = true
         viewBinding = true
+    }
+    kapt {
+        javacOptions {
+            option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
+        }
     }
 }
 
@@ -49,4 +62,31 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    def lifecycle_version = "2.3.1"
+    def coroutines = "1.4.3"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation 'com.google.code.gson:gson:2.8.7'
+
+    //Retrofit
+    def retrofitVersion = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+
+    //Hilt for di
+    implementation "com.google.dagger:hilt-android:$rootProject.ext.HILT_VERSION"
+    kapt "com.google.dagger:hilt-android-compiler:$rootProject.ext.HILT_VERSION"
+
+    //Room
+    implementation "androidx.room:room-runtime:$rootProject.ext.ROOM"
+    implementation "androidx.room:room-ktx:$rootProject.ext.ROOM"
+    kapt "androidx.room:room-compiler:$rootProject.ext.ROOM"
 }

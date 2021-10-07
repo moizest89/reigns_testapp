@@ -4,7 +4,11 @@ import android.content.Context
 import com.moizest89.reign.apptest.BuildConfig
 import com.moizest89.reign.apptest.data.datasource.remote.ConnectivityInterceptor
 import com.moizest89.reign.apptest.data.datasource.remote.RemoteDataService
+import com.moizest89.reign.apptest.data.datasource.remote.RemoteDataSource
+import com.moizest89.reign.apptest.data.datasource.remote.RemoteDataSourceImpl
+import com.moizest89.reign.apptest.data.repository.NewsRepositoryImpl
 import com.moizest89.reign.apptest.data.utils.WifiService
+import com.moizest89.reign.apptest.domain.repository.NewsRepository
 import com.moizest89.reign.apptest.presentation.utils.NetworkUtils
 import dagger.Module
 import dagger.Provides
@@ -66,5 +70,21 @@ object AppModule {
     @Provides
     fun provideCurrencyService(retrofit: Retrofit): RemoteDataService =
         retrofit.create(RemoteDataService::class.java)
+
+    @Provides
+    fun provideRemoteDataSourceImpl(
+        remoteDataService: RemoteDataService
+    ): RemoteDataSource {
+        return RemoteDataSourceImpl(remoteDataService)
+    }
+
+    //Repositories
+    @Singleton
+    @Provides
+    fun provideNewsRepository(
+        remoteDataSource: RemoteDataSource
+    ): NewsRepository {
+        return NewsRepositoryImpl(remoteDataSource)
+    }
 
 }

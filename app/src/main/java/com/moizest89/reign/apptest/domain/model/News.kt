@@ -9,7 +9,7 @@ data class NewsItem(
     var numComments: Int = 0,
     var objectID: String = "",
     var parentId: Int = 0,
-    var storyText: Any? = Any(),
+    var storyText: String = "",
     var createdAt: String = "",
     var createdAtI: Int = 0,
 )

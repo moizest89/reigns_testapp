@@ -1,6 +1,8 @@
 package com.moizest89.reign.apptest.data.utils
 
 import com.moizest89.reign.apptest.data.datasource.remote.RemoteResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 fun <T> HttpException.errorMessage(): RemoteResult.Error<T> {
@@ -39,4 +41,17 @@ fun <INPUT, OUTPUT> RemoteResult<INPUT>.mapToResult(
             RepositoryResult.Error( message = this.message)
         }
     }
+}
+
+suspend fun <INPUT> RemoteResult<INPUT>.saveResult(
+    func: suspend (INPUT) -> Unit
+): RemoteResult<INPUT> {
+    when(this){
+        is RemoteResult.Success -> {
+            withContext(Dispatchers.IO){
+                func(data)
+            }
+        }
+    }
+    return this
 }

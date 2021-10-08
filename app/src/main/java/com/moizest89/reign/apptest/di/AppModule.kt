@@ -1,7 +1,12 @@
 package com.moizest89.reign.apptest.di
 
 import android.content.Context
+import androidx.room.Room
 import com.moizest89.reign.apptest.BuildConfig
+import com.moizest89.reign.apptest.data.datasource.database.DataBaseDataSource
+import com.moizest89.reign.apptest.data.datasource.database.DataBaseDataSourceImpl
+import com.moizest89.reign.apptest.data.datasource.database.NewsDao
+import com.moizest89.reign.apptest.data.datasource.database.NewsDataBase
 import com.moizest89.reign.apptest.data.datasource.remote.ConnectivityInterceptor
 import com.moizest89.reign.apptest.data.datasource.remote.RemoteDataService
 import com.moizest89.reign.apptest.data.datasource.remote.RemoteDataSource
@@ -71,6 +76,8 @@ object AppModule {
     fun provideCurrencyService(retrofit: Retrofit): RemoteDataService =
         retrofit.create(RemoteDataService::class.java)
 
+
+    //Datasources
     @Provides
     fun provideRemoteDataSourceImpl(
         remoteDataService: RemoteDataService
@@ -78,13 +85,38 @@ object AppModule {
         return RemoteDataSourceImpl(remoteDataService)
     }
 
+    @Provides
+    fun provideDataBaseDataSourceImpl(
+        newsDao: NewsDao
+    ): DataBaseDataSource {
+        return DataBaseDataSourceImpl(newsDao)
+    }
+
+    //Database
+    @Provides
+    @Singleton
+    fun provideNewsDataBase(@ApplicationContext appContext: Context): NewsDataBase {
+        return Room.databaseBuilder(
+            appContext,
+            NewsDataBase::class.java,
+            "reign.design.test"
+        ).build()
+    }
+
+    @Provides
+    fun provideCounterDao(newsDataBase: NewsDataBase): NewsDao {
+        return newsDataBase.newsDao()
+    }
+
+
     //Repositories
     @Singleton
     @Provides
     fun provideNewsRepository(
-        remoteDataSource: RemoteDataSource
+        remoteDataSource: RemoteDataSource,
+        dataBaseDataSource: DataBaseDataSource
     ): NewsRepository {
-        return NewsRepositoryImpl(remoteDataSource)
+        return NewsRepositoryImpl(remoteDataSource,dataBaseDataSource)
     }
 
 }

@@ -3,8 +3,10 @@ package com.moizest89.reign.apptest.presentation.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.moizest89.reign.apptest.R
 import com.moizest89.reign.apptest.databinding.ItemNewsListBinding
 import com.moizest89.reign.apptest.domain.model.NewsItem
+import com.moizest89.reign.apptest.presentation.utils.formatted
 
 class MainAdapter(
     private val data: MutableList<NewsItem>
@@ -17,6 +19,11 @@ class MainAdapter(
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val item = data[position]
         holder.textViewTitle.text = item.title
+        holder.textViewSubTitle.text = String.format(
+            holder.itemView.context.getString(R.string.news_subtitle_test),
+            item.author,
+            item.createdAt.formatted()
+        )
     }
 
     fun isEmpty() = data.isEmpty()

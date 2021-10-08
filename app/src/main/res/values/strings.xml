@@ -10,28 +10,6 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <!-- Examples -->
-    <string name="drinks_title">Drinks</string>
-    <string-array name="drinks_array">
-        <item>Cups of coffee</item>
-        <item>Glasses of water</item>
-        <item>Tequila shots</item>
-        <item>Caipirinhas</item>
-    </string-array>
-    <string name="food_title">Food</string>
-    <string-array name="food_array">
-        <item>Hot-dogs</item>
-        <item>Cupcakes eaten</item>
-        <item>Chicken sandwich</item>
-    </string-array>
-    <string name="misc_title">Misc</string>
-    <string-array name="misc_array">
-        <item>Times sneezed</item>
-        <item>Naps</item>
-        <item>Day dreaming</item>
-    </string-array>
-
-    <!-- Others -->
     <string name="welcome_title">Counters</string>
     <string name="welcome_description">Capture cups of lattes, frapuccinos, or anything else that can be counted.</string>
     <string name="get_started">Get started</string>
@@ -70,5 +48,7 @@
     <string name="title_activity_counter_list">CounterListActivity</string>
     <string name="counter_alert_add_hint">Example: Cups of coffee</string>
     <string name="title_activity_counter_examples">CounterExamplesActivity</string>
+
+    <string name="news_subtitle_test">%s - %s</string>
 
 </resources>

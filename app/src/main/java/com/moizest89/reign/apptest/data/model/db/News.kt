@@ -1,12 +1,11 @@
-package com.moizest89.reign.apptest.domain.model
+package com.moizest89.reign.apptest.data.model.db
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-
-@Parcelize
-data class NewsItem(
-    var id: Int = 0,
+@Entity
+data class NewsEntity(
+    @PrimaryKey var id: Int = 0,
     var title: String? = "",
     var url: String? = "",
     var author: String = "",
@@ -17,4 +16,4 @@ data class NewsItem(
     var storyText: String = "",
     var createdAt: String = "",
     var createdAtI: Int = 0,
-) : Parcelable
+)

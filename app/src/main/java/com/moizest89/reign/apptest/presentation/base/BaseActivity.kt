@@ -1,6 +1,7 @@
 package com.moizest89.reign.apptest.presentation.base
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.moizest89.reign.apptest.databinding.ActivityMainBinding
 
@@ -14,5 +15,13 @@ open class BaseActivity : AppCompatActivity() {
         super.setContentView(layoutResID)
     }
 
-    open fun inflateItemsView(binding: ActivityMainBinding){}
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

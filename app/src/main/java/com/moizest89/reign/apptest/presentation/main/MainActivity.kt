@@ -73,7 +73,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun progressAction(isShowing: Boolean) {
-        this.progressBar.visibility = if (isShowing) View.VISIBLE else View.GONE
+        binding.includeItems.progressBar.visibility = if (isShowing) View.VISIBLE else View.GONE
         if (isShowing) {
 //            if (this.linearLayoutEmptyState.visibility == View.VISIBLE) {
 //                this.linearLayoutEmptyState.visibility = View.GONE
@@ -87,7 +87,6 @@ class MainActivity : BaseActivity() {
     fun inflateItemsView(binding: ActivityMainBinding) {
         this.swipeRefreshLayout = binding.includeItems.swipeRefreshLayout
         this.recyclerView = binding.includeItems.recyclerViewData
-        this.progressBar = binding.includeItems.progressBar
 
         with(this.recyclerView) {
             this.layoutManager = LinearLayoutManager(this@MainActivity)

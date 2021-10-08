@@ -50,5 +50,6 @@
     <string name="title_activity_counter_examples">CounterExamplesActivity</string>
 
     <string name="news_subtitle_test">%s - %s</string>
+    <string name="news_details_share_item">%s\n%s</string>
 
 </resources>

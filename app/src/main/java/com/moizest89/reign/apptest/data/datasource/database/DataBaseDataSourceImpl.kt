@@ -7,13 +7,17 @@ class DataBaseDataSourceImpl @Inject constructor(
     private val newsDao: NewsDao
 ) : DataBaseDataSource{
     override suspend fun insertAllNewsItems(itemList: MutableList<NewsEntity>): MutableList<NewsEntity> {
-        this.newsDao.deleteNewsItems()
+        this.deleteAllAllItems()
         if(itemList.isNotEmpty()) this.newsDao.insertNewsItems(itemList)
         return itemList
     }
 
     override suspend fun getAllNewsItems(): MutableList<NewsEntity> {
         return newsDao.getNewsItems().toMutableList()
+    }
+
+    override suspend fun deleteAllAllItems() {
+        this.newsDao.deleteNewsItems()
     }
 
 }

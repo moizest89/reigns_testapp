@@ -12,9 +12,10 @@ class MainAdapter(
     private val data: MutableList<NewsItem>
 ) : RecyclerView.Adapter<MainAdapter.Holder>() {
 
+    private var onItemClickListener: ((NewsItem, Int) -> Unit?)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder =
         Holder(ItemNewsListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val item = data[position]
@@ -24,18 +25,26 @@ class MainAdapter(
             item.author,
             item.createdAt.formatted()
         )
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.invoke(item, position)
+        }
     }
 
     fun isEmpty() = data.isEmpty()
 
     fun setData(items: MutableList<NewsItem>) {
+        this.data.clear()
         this.data.addAll(items)
         notifyDataSetChanged()
     }
 
+    fun onItemClickListener(onItemClickListener: (NewsItem, Int) -> Unit) {
+        this.onItemClickListener = onItemClickListener
+    }
+
     override fun getItemCount(): Int = data.size
 
-    inner class Holder(itemView: ItemNewsListBinding) : RecyclerView.ViewHolder(itemView.root){
+    inner class Holder(itemView: ItemNewsListBinding) : RecyclerView.ViewHolder(itemView.root) {
         var textViewTitle = itemView.textViewTitle
         var textViewSubTitle = itemView.textViewSubTitle
     }

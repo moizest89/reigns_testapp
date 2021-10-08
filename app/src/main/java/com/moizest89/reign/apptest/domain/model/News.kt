@@ -1,5 +1,10 @@
 package com.moizest89.reign.apptest.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
 data class NewsItem(
     var id: Int = 0,
     var title: String? = "",
@@ -12,4 +17,4 @@ data class NewsItem(
     var storyText: String = "",
     var createdAt: String = "",
     var createdAtI: Int = 0,
-)
+) : Parcelable

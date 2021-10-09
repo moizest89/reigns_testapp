@@ -89,4 +89,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$rootProject.ext.ROOM"
     implementation "androidx.room:room-ktx:$rootProject.ext.ROOM"
     kapt "androidx.room:room-compiler:$rootProject.ext.ROOM"
+
+    implementation 'ru.rambler.android:swipe-layout:1.1.0'
 }

@@ -26,7 +26,7 @@ class MainAdapter(
             item.createdAt.formatted()
         )
         holder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(item, position)
+//            onItemClickListener?.invoke(item, position)
         }
     }
 

@@ -38,9 +38,19 @@ The pallet color is based from [Reign Technology](https://www.reign.cl/en/) webs
 2. Open the project in Android Studio
 3. Go to file named local.properties and create a variable called `API_URL` like the following example:
 ![Cornershop logo](https://i.imgur.com/UwG5fzG.png)
-4. Set the API URL of the API service https://hn.algolia.com/api/v1/search_by_date?query=mobile
+4. Set API_URL with the value:  https://hn.algolia.com/api/v1/search_by_date?query=mobile
 5. Go to Menu option build -> Clean Project. This step creates `BuildConfig.API_URL` value to use in the application.
 6. Run the project and start to use it.
+
+
+
+#### Note: 
+
+If you want to test the application without compile you have the possibility tho download an [APK FILE](https://github.com/moizest89/reigns_testapp/blob/develop/backgrounds/app-debug.apk?raw=true) directly 
+
+
+
+#### Regards!
 
 
 

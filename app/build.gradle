@@ -91,4 +91,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.ext.ROOM"
 
     implementation 'ru.rambler.android:swipe-layout:1.1.0'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
 }

@@ -2,6 +2,7 @@ package com.moizest89.reign.apptest
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -53,7 +54,7 @@ class MainActivity : BaseActivity() {
                     this.swipeRefreshLayout.isRefreshing = it.isLoading
                 }
                 is State.DataState<*> -> {
-                    this.mAdapter.setData(it.data as MutableList<NewsItem>)
+                    this.mAdapter.submitList(it.data as MutableList<NewsItem>)
                     this.swipeRefreshLayout.visibility = View.VISIBLE
                 }
             }
@@ -66,7 +67,7 @@ class MainActivity : BaseActivity() {
             this.swipeRefreshLayout.visibility = View.VISIBLE
         }
         this.swipeRefreshLayout.setOnRefreshListener {
-            this.newsListViewModel.getNewsList()
+            this.newsListViewModel.getNewsList(false)
         }
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -94,6 +95,9 @@ class MainActivity : BaseActivity() {
             mAdapter.onItemClickListener { item, position ->
                 showNewsDetails(item)
             }
+            mAdapter.onItemDeleted { item, position ->
+                newsListViewModel.deleteNewsItem(item)
+            }
         }
     }
 
@@ -106,15 +110,28 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onSaveInstanceState(
+        outState: Bundle,
+        outPersistentState: PersistableBundle
+    ) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        mAdapter.saveStates(outState)
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        mAdapter.restoreStates(savedInstanceState);
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)

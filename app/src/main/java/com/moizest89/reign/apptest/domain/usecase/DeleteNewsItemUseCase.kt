@@ -10,11 +10,12 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class NewListUseCase @Inject constructor(
+class DeleteNewsItemUseCase @Inject constructor(
     private val newsRepository: NewsRepository
 ) {
-    suspend operator fun invoke(): Flow<State> =
-        newsRepository.getNewsListSearchByDateWithQueryMobile().map {
+
+    suspend operator fun invoke(newsItem: NewsItem): Flow<State> =
+        newsRepository.deleteNewsItem(newsItem).map {
             when (it) {
                 is RepositoryResult.Error -> {
                     State.ErrorState(message = it.message, code = it.code)
@@ -23,9 +24,8 @@ class NewListUseCase @Inject constructor(
                     State.LoadingState(it.isLoading)
                 }
                 is RepositoryResult.Success -> {
-                    State.DataState(data = it.data ?: mutableListOf())
+                    State.DataState(data = it.data)
                 }
             }
         }.flowOn(Dispatchers.IO)
-
 }

@@ -3,6 +3,7 @@ package com.moizest89.reign.apptest.data.repository
 import com.moizest89.reign.apptest.data.datasource.database.DataBaseDataSource
 import com.moizest89.reign.apptest.data.datasource.remote.RemoteDataSource
 import com.moizest89.reign.apptest.data.mapper.toNewsEntities
+import com.moizest89.reign.apptest.data.mapper.toNewsEntity
 import com.moizest89.reign.apptest.data.mapper.toNewsItems
 import com.moizest89.reign.apptest.data.mapper.toNewsListItem
 import com.moizest89.reign.apptest.data.utils.RepositoryResult
@@ -19,16 +20,26 @@ class NewsRepositoryImpl @Inject constructor(
     private val dataBaseDataSource: DataBaseDataSource
 ) : NewsRepository {
 
-    override suspend fun getNewsListSearchByDateWithQueryMobile(): Flow<RepositoryResult<MutableList<NewsItem>>> =
+    override suspend fun getNewsListSearchByDateWithQueryMobile(reloadFromCache: Boolean): Flow<RepositoryResult<MutableList<NewsItem>>> =
         flow {
             emit(RepositoryResult.Loading(true))
-            val fromDatabase = dataBaseDataSource.getAllNewsItems().toNewsItems()
-            emit(RepositoryResult.Success(data = fromDatabase))
-            emit(RepositoryResult.Loading(true))
+            if (reloadFromCache) {
+                emit(RepositoryResult.Success(data = dataBaseDataSource.getAllNewsItems().toNewsItems()))
+                emit(RepositoryResult.Loading(true))
+            }
             //remote
             val fetch = remoteDataSource.getHitsByQuery("mobile")
             fetch.saveResult { dataBaseDataSource.insertAllNewsItems(it.toNewsEntities()) }
-            emit(fetch.mapToResult { it.toNewsListItem() })
+            emit(RepositoryResult.Success(data = dataBaseDataSource.getAllNewsItems().toNewsItems()))
+            emit(RepositoryResult.Loading(false))
+        }
+
+    override suspend fun deleteNewsItem(newsItem: NewsItem): Flow<RepositoryResult<MutableList<NewsItem>>> =
+        flow {
+            emit(RepositoryResult.Loading(true))
+            dataBaseDataSource.deleteNewsItem(newsItem.toNewsEntity())
+            val fromDatabase = dataBaseDataSource.getAllNewsItems().toNewsItems()
+            emit(RepositoryResult.Success(data = fromDatabase))
             emit(RepositoryResult.Loading(false))
         }
 

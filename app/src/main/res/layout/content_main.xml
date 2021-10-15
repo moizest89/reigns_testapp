@@ -36,14 +36,6 @@
             android:textColor="@color/primaryTextColor"
             android:textSize="@dimen/text_title" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_counters_phrase"
-            android:textColor="@color/secondaryTextColor"
-            android:textSize="@dimen/text_subhead" />
-
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

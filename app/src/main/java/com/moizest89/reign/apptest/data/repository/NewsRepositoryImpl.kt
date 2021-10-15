@@ -30,7 +30,7 @@ class NewsRepositoryImpl @Inject constructor(
             //remote
             val fetch = remoteDataSource.getHitsByQuery("mobile")
             fetch.saveResult { dataBaseDataSource.insertAllNewsItems(it.toNewsEntities()) }
-            emit(RepositoryResult.Success(data = dataBaseDataSource.getAllNewsItems().toNewsItems()))
+            emit(fetch.mapToResult { it.toNewsListItem() })
             emit(RepositoryResult.Loading(false))
         }
 

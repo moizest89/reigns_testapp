@@ -19,6 +19,7 @@ import com.moizest89.reign.apptest.presentation.State
 import com.moizest89.reign.apptest.presentation.details.MewsDetailsActivity
 import com.moizest89.reign.apptest.presentation.main.MainAdapter
 import com.moizest89.reign.apptest.presentation.main.MainViewModel
+import com.moizest89.reign.apptest.presentation.utils.Utils
 import com.moizest89.reign.apptest.presentation.utils.Utils.SEND_MAIN_DATA
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,9 +27,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
 
     private val newsListViewModel by viewModels<MainViewModel>()
 
@@ -47,15 +45,19 @@ class MainActivity : BaseActivity() {
         this.newsListViewModel.newsData.observe(this) {
             when (it) {
                 is State.ErrorState -> {
-
+                    showAlertErrorMessage()
                 }
                 is State.LoadingState -> {
                     progressAction(it.isLoading)
-                    this.swipeRefreshLayout.isRefreshing = it.isLoading
+                    binding.includeItems.swipeRefreshLayout.isRefreshing = it.isLoading
                 }
                 is State.DataState<*> -> {
-                    this.mAdapter.submitList(it.data as MutableList<NewsItem>)
-                    this.swipeRefreshLayout.visibility = View.VISIBLE
+                    val data = it.data as MutableList<NewsItem>
+                    this.mAdapter.submitList(data)
+                    binding.includeItems.swipeRefreshLayout.visibility = View.VISIBLE
+                    if(data.isEmpty() && this.mAdapter.isEmpty()){
+                        binding.includeItems.linearLayoutEmptyState.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -63,10 +65,10 @@ class MainActivity : BaseActivity() {
         if (this.mAdapter.isEmpty()) {
             this.newsListViewModel.getNewsList()
         } else {
-            this.progressBar.visibility = View.GONE
-            this.swipeRefreshLayout.visibility = View.VISIBLE
+            binding.includeItems.progressBar.visibility = View.GONE
+            binding.includeItems.swipeRefreshLayout.visibility = View.VISIBLE
         }
-        this.swipeRefreshLayout.setOnRefreshListener {
+        binding.includeItems.swipeRefreshLayout.setOnRefreshListener {
             this.newsListViewModel.getNewsList(false)
         }
 
@@ -76,20 +78,17 @@ class MainActivity : BaseActivity() {
     private fun progressAction(isShowing: Boolean) {
         binding.includeItems.progressBar.visibility = if (isShowing) View.VISIBLE else View.GONE
         if (isShowing) {
-//            if (this.linearLayoutEmptyState.visibility == View.VISIBLE) {
-//                this.linearLayoutEmptyState.visibility = View.GONE
-//            }
-            if (this.swipeRefreshLayout.visibility == View.VISIBLE) {
-                swipeRefreshLayout.isRefreshing = true
+            if (binding.includeItems.linearLayoutEmptyState.visibility == View.VISIBLE) {
+                binding.includeItems.linearLayoutEmptyState.visibility = View.GONE
+            }
+            if (binding.includeItems.swipeRefreshLayout.visibility == View.VISIBLE) {
+                binding.includeItems.swipeRefreshLayout.isRefreshing = true
             }
         }
     }
 
     fun inflateItemsView(binding: ActivityMainBinding) {
-        this.swipeRefreshLayout = binding.includeItems.swipeRefreshLayout
-        this.recyclerView = binding.includeItems.recyclerViewData
-
-        with(this.recyclerView) {
+        with(binding.includeItems.recyclerViewData) {
             this.layoutManager = LinearLayoutManager(this@MainActivity)
             this.adapter = mAdapter
             mAdapter.onItemClickListener { item, position ->
@@ -99,6 +98,14 @@ class MainActivity : BaseActivity() {
                 newsListViewModel.deleteNewsItem(item)
             }
         }
+    }
+
+    fun showAlertErrorMessage(){
+        Utils.showSimpleErrorDialog(
+            this,
+            getString(R.string.generic_error_description),
+            getString(R.string.connection_error_description)
+        )
     }
 
     private fun showNewsDetails(newsItem: NewsItem) {

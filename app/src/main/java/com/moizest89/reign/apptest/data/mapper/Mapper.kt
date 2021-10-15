@@ -21,11 +21,11 @@ fun Hit.toNewsItem(): NewsItem {
         createdAt = this.createdAt,
         createdAtI = this.createdAtI,
         url = this.storyUrl,
-        commentText = this.commentText?:"",
+        commentText = this.commentText ?: "",
         numComments = this.numComments,
         objectID = this.objectID,
         parentId = this.parentId,
-        storyText = this.storyText?:""
+        storyText = this.storyText ?: ""
     )
 }
 
@@ -37,11 +37,11 @@ fun Hit.toNewsEntity(): NewsEntity {
         createdAt = this.createdAt,
         createdAtI = this.createdAtI,
         url = this.storyUrl,
-        commentText = this.commentText?:"",
+        commentText = this.commentText ?: "",
         numComments = this.numComments,
         objectID = this.objectID,
         parentId = this.parentId,
-        storyText = this.storyText?:""
+        storyText = this.storyText ?: ""
     )
 }
 
@@ -49,7 +49,7 @@ fun MutableList<NewsEntity>.toNewsItems(): MutableList<NewsItem> {
     return this.map { it.toNewsItem() }.toMutableList()
 }
 
-fun NewsEntity.toNewsItem() : NewsItem{
+fun NewsEntity.toNewsItem(): NewsItem {
     return NewsItem(
         id = this.id,
         title = this.title ?: run { this.title },
@@ -57,10 +57,26 @@ fun NewsEntity.toNewsItem() : NewsItem{
         createdAt = this.createdAt,
         createdAtI = this.createdAtI,
         url = this.url,
-        commentText = this.commentText?:"",
+        commentText = this.commentText ?: "",
         numComments = this.numComments,
         objectID = this.objectID,
         parentId = this.parentId,
-        storyText = this.storyText?:""
+        storyText = this.storyText ?: ""
+    )
+}
+
+fun NewsItem.toNewsEntity(): NewsEntity {
+    return NewsEntity(
+        id = this.id,
+        title = this.title ?: run { this.title },
+        author = this.author,
+        createdAt = this.createdAt,
+        createdAtI = this.createdAtI,
+        url = this.url,
+        commentText = this.commentText ?: "",
+        numComments = this.numComments,
+        objectID = this.objectID,
+        parentId = this.parentId,
+        storyText = this.storyText ?: ""
     )
 }

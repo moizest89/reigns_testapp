@@ -5,10 +5,10 @@ import javax.inject.Inject
 
 class DataBaseDataSourceImpl @Inject constructor(
     private val newsDao: NewsDao
-) : DataBaseDataSource{
+) : DataBaseDataSource {
     override suspend fun insertAllNewsItems(itemList: MutableList<NewsEntity>): MutableList<NewsEntity> {
-        this.deleteAllAllItems()
-        if(itemList.isNotEmpty()) this.newsDao.insertNewsItems(itemList)
+        this.deleteAllNewsItems()
+        if (itemList.isNotEmpty()) this.newsDao.insertNewsItems(itemList)
         return itemList
     }
 
@@ -16,8 +16,11 @@ class DataBaseDataSourceImpl @Inject constructor(
         return newsDao.getNewsItems().toMutableList()
     }
 
-    override suspend fun deleteAllAllItems() {
+    override suspend fun deleteAllNewsItems() {
         this.newsDao.deleteNewsItems()
     }
 
+    override suspend fun deleteNewsItem(newsEntity: NewsEntity) {
+        this.newsDao.deleteNewsItemById(newsEntity.id)
+    }
 }
